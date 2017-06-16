@@ -1,0 +1,78 @@
+/*MULTI SELECT STYLE*/
+
+ui-multi-select > div {
+  width: 100%;
+  min-height: 40px;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);
+  display: block;
+  font-family: Roboto,Helvetica Neue,sans-serif;
+  font-size: 16px;
+  padding: 0 0 8px 3px;
+  vertical-align: middle;
+  padding: 0 5px 0px 5px;
+  position: relative;
+  background: #FFFFFF;
+}
+
+ui-multi-select > div > input{
+  border: 0;
+  height: 40px;
+  line-height: 40px;
+  padding: 0;
+  background: transparent;
+  font-size: 100%;
+  vertical-align: baseline;
+  user-select: text;
+  cursor: auto;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: start;
+  margin: 0em 0em 0em 0em;
+  font: 13.3333px Arial;
+  outline: none;
+  -webkit-appearance: none;
+  font-size: 14px;
+  box-sizing: border-box;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  padding: 0 15px;
+  line-height: 40px;
+  height: 40px;
+}
+
+ui-multi-select > div > ul{
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 100%;
+  box-shadow: 0 2px 4px -1px rgba(0,0,0,.2),0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12);
+  transition: all .4s cubic-bezier(.25,.8,.25,1);
+  border: none;
+  padding: 0;
+  background: #FFFFFF;
+}
+
+ui-multi-select > div > ul > li{
+  font-size: 14px;
+  overflow: hidden;
+  padding: 0 15px;
+  line-height: 48px;
+  height: 48px;
+  -webkit-transition: background .15s linear;
+  transition: background .15s linear;
+  margin: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+ui-multi-select > div > ul > li:hover{
+  background: rgb(238,238,238);
+  cursor: pointer;
+}
