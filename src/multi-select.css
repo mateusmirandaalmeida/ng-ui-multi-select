@@ -57,9 +57,14 @@ ui-multi-select > div > ul{
   border: none;
   padding: 0;
   background: #FFFFFF;
+  display: none;
 }
 
-ui-multi-select > div > ul > li{
+ui-multi-select > div > ul.open{
+  display: block;
+}
+
+ui-multi-select > div > ul li{
   font-size: 14px;
   overflow: hidden;
   padding: 0 15px;
@@ -72,7 +77,7 @@ ui-multi-select > div > ul > li{
   text-overflow: ellipsis;
 }
 
-ui-multi-select > div > ul > li:hover{
+ui-multi-select > div > ul li:hover{
   background: rgb(238,238,238);
   cursor: pointer;
 }

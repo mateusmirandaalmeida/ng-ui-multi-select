@@ -2,6 +2,7 @@
 require('./multi-select.css');
 //directives
 import MultiSelect from  './multi-select';
+import MultiSelectOption from  './multi-select-option';
 
 ((exports, angular) => {
 
@@ -10,7 +11,8 @@ import MultiSelect from  './multi-select';
   }
 
   angular.module('ngUiMultiSelect', [])
-        .directive('uiMultiSelect', MultiSelect);
+        .component('uiMultiSelect', MultiSelect)
+        .component('uiMultiSelectOption', MultiSelectOption)
 
   if(exports){
      exports = ngEasyInfiniteScroll;

@@ -19,10 +19,14 @@
           <div class="col-md-4">
             <div class="form-group">
               <label>Funcionarios: </label>
-              <ui-multi-select placeholder="Buscar...">
-                <ui-multi-select-option ng-repeat="functionario in functionarios">{{functionario}}</ui-multi-select-option>
+
+              <ui-multi-select placeholder="Buscar..." ng-model="functionariosSelecionados">
+                <ui-multi-select-option ng-repeat="func in functionarios" ng-value="func">{{func.nome}}</ui-multi-select-option>
               </ui-multi-select>
+
             </div>
+            <br><br>
+            {{functionariosSelecionados}}
           </div>
         </div>
       </div>
@@ -34,6 +38,7 @@
 
     <script type="text/javascript">
       angular.module('app', ['ngUiMultiSelect']).controller('ctrl', function($scope, $timeout){
+          $scope.functionariosSelecionados = []
           $scope.functionarios = [
             { nome: 'Mateus', idade: 20},
             { nome: 'Felipe', idade: 25},

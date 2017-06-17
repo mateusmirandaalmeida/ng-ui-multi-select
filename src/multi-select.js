@@ -1,33 +1,48 @@
-const TEMPLATE = `
+const MultiSelect = {
+  require: ['ngModel'],
+  transclude: true,
+  template:  `
+    <div>
+      <input placeholder="{{placeholder}}" ng-focus="$ctrl.open()" ng-blur="$ctrl.close()" />
+      <ul ng-transclude>
+      </ul>
+    </div>
+  `,
+  bindings: {
+    ngModel    : '=',
+    placeholder: '@'
+  },
+  controller: ['$scope','$attrs','$timeout','$element', function($scope,$attrs,$timeout,$element){
+    let ctrl = this;
 
-  <div>
-    <input placeholder="{{placeholder}}"/>
+    ctrl.open = () => {
+      const ul = $element.find('ul');
+      if(ul && ul[0]){
+        ul[0].classList.add('open');
+      }
+    }
 
-    <ul ng-transclude>
-    </ul>
+    ctrl.close = () => {
+      setTimeout(()=>{
+        const ul = $element.find('ul');
+        if(ul && ul[0]){
+          ul[0].classList.remove('open');
+        }
+      }, 100);
+    }
 
-  </div>
+    ctrl.addItem = value => {
+      ctrl.ngModel.push(value);
+    }
 
-`;
+    ctrl.itemIsSelect = item => {
+      if(!ctrl.ngModel) return false;
+      return ctrl.ngModel.filter(i => {
+        return angular.equals(i, item);
+      }).length > 0;
+    }
 
-const MultiSelect = () => {
-
-  const controller = (scope, elm, attrs) => {
-    console.log('oi');
-  }
-
-  return {
-    restrict : 'E',
-    priority : 100,
-    template: TEMPLATE,
-    scope: {
-      placeholder: '@'
-    },
-    link:controller
-  }
-
+  }]
 }
-
-MultiSelect.$inject = [];
 
 export default MultiSelect;
