@@ -21,11 +21,17 @@
               <label>Funcionarios: </label>
 
               <ui-multi-select placeholder="Buscar..." ng-model="functionariosSelecionados">
-                <ui-multi-select-option ng-repeat="func in functionarios" ng-value="func">{{func.nome}}</ui-multi-select-option>
+                <ui-multi-select-item ng-repeat="func in functionariosSelecionados" ng-value="func">
+                  {{func}}
+                </ui-multi-select-item>
+                <ui-multi-select-option ng-repeat="func in functionarios" ng-value="func.nome">
+                  {{func.nome}}
+                </ui-multi-select-option>
               </ui-multi-select>
 
             </div>
-            <br><br>
+          </div>
+          <div class="col-md-8">
             {{functionariosSelecionados}}
           </div>
         </div>
@@ -38,7 +44,11 @@
 
     <script type="text/javascript">
       angular.module('app', ['ngUiMultiSelect']).controller('ctrl', function($scope, $timeout){
-          $scope.functionariosSelecionados = []
+
+          $timeout(function(){
+            // $scope.functionariosSelecionados = [{"nome":"Felipe","idade":25}]
+          }, 1000)
+
           $scope.functionarios = [
             { nome: 'Mateus', idade: 20},
             { nome: 'Felipe', idade: 25},

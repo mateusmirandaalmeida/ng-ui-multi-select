@@ -7,20 +7,32 @@ ui-multi-select > div {
   display: block;
   font-family: Roboto,Helvetica Neue,sans-serif;
   font-size: 16px;
-  padding: 0 0 8px 3px;
+  padding: 0;
   vertical-align: middle;
-  padding: 0 5px 0px 5px;
   position: relative;
   background: #FFFFFF;
 }
 
+ui-multi-select > div .item-container{
+  float: left;
+  margin-left: 5px;
+  padding: 5px 5px 3px 5px;
+  margin-top: 5px;
+  background: rgb(238,238,238);
+}
+
+ui-multi-select > div .item-container > i{
+  font-style: italic;
+  font-weight: 900;
+  cursor: pointer;
+  color: #5f5b5b
+}
+
+ui-multi-select > div > span > i:hover{
+  color: #000000;
+}
+
 ui-multi-select > div > input{
-  border: 0;
-  height: 40px;
-  line-height: 40px;
-  padding: 0;
-  background: transparent;
-  font-size: 100%;
   vertical-align: baseline;
   user-select: text;
   cursor: auto;
@@ -31,9 +43,8 @@ ui-multi-select > div > input{
   text-shadow: none;
   display: inline-block;
   text-align: start;
-  margin: 0em 0em 0em 0em;
+  margin: 0em 0em 0em 0em;''
   font: 13.3333px Arial;
-  outline: none;
   -webkit-appearance: none;
   font-size: 14px;
   box-sizing: border-box;
@@ -41,7 +52,6 @@ ui-multi-select > div > input{
   box-shadow: none;
   outline: none;
   background: transparent;
-  width: 100%;
   padding: 0 15px;
   line-height: 40px;
   height: 40px;
