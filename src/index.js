@@ -11,13 +11,13 @@ import MultiSelectItem from  './multi-select-item';
     throw "ng-ui-multi-select require's AngularJS in window!!";
   }
 
-  angular.module('ngUiMultiSelect', [])
+  const module = angular.module('ngUiMultiSelect', [])
         .component('uiMultiSelect', MultiSelect)
         .component('uiMultiSelectOption', MultiSelectOption)
         .component('uiMultiSelectItem', MultiSelectItem)
 
   if(exports){
-     exports = ngEasyInfiniteScroll;
+     exports = module.name;
   }
 
 })( (window && window.module && window.module.exports) ? module.exports : undefined, (window && window.angular) ? window.angular : undefined);

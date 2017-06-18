@@ -21,14 +21,22 @@ ui-multi-select > div .item-container{
   background: rgb(238,238,238);
 }
 
+ui-multi-select > div .item-container{
+  font-size: 14px;
+}
+
+ui-multi-select > div .item-container span{
+  color: #666666;
+}
+
 ui-multi-select > div .item-container > i{
   font-style: italic;
   font-weight: 900;
   cursor: pointer;
-  color: #5f5b5b
+  color: #5f5b5b;
 }
 
-ui-multi-select > div > span > i:hover{
+ui-multi-select > div .item-container > i:hover{
   color: #000000;
 }
 

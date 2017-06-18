@@ -29,7 +29,7 @@ const MultiSelect = {
         ul[0].classList.add('open');
         setTimeout(()=>{
           ctrl.opened = true;
-        }, 200)
+        }, 500)
       }
     }
 
