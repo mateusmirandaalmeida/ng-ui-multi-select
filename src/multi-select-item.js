@@ -1,6 +1,6 @@
 const TEMPLATE = `
   <div class="item-container"><span ng-transclude></span>
-    <i data-ng-click="$ctrl.uiMultiSelectCtrl.removeItem($ctrl.ngValue)">X</i>
+    <i data-ng-click="$ctrl.uiMultiSelectCtrl.removeItem($ctrl.ngValue, $event)">X</i>
   </div>
 `;
 

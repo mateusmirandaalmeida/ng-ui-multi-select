@@ -9,7 +9,8 @@ const MultiSelect = {
       <div ng-transclude="items"></div>
       <input placeholder="{{$ctrl.placeholder}}"
              data-ng-model="$ctrl.inputValue"
-             data-ng-focus="$ctrl.open()"
+             data-ng-click="$ctrl.open($event)"
+             data-ng-keypress="$ctrl.keyPress($event)"
              style="{{$ctrl.ngModel.length == 0 ? 'width: 100%' : ''}}" />
       <ul ng-transclude="options">
       </ul>
@@ -17,13 +18,14 @@ const MultiSelect = {
   `,
   bindings: {
     ngModel    : '=',
+    closeOnSelectItem  : '=?',
     placeholder: '@?',
     searchField: '@?'
   },
   controller: ['$scope','$attrs','$timeout','$element', function($scope,$attrs,$timeout,$element){
     let ctrl = this;
-
-    ctrl.open = () => {
+    ctrl.open = (evt) => {
+      if(evt) evt.stopPropagation();
       const ul = $element.find('ul');
       if(ul && ul[0]){
         ul[0].classList.add('open');
@@ -41,6 +43,10 @@ const MultiSelect = {
           ul[0].classList.remove('open');
         }
       }
+    }
+
+    ctrl.keyPress = evt => {
+      console.log(evt);
     }
 
     let listenerClick = document.addEventListener('click', event => setTimeout(() => {
@@ -72,13 +78,19 @@ const MultiSelect = {
     ctrl.addItem = (value, evt) => {
       ctrl.ngModel = ctrl.ngModel || [];
       ctrl.ngModel.push(value);
+      if(ctrl.closeOnSelectItem == undefined || !ctrl.closeOnSelectItem){
+        evt.stopPropagation();
+      }
     }
 
-    ctrl.removeItem = (value) => {
+    ctrl.removeItem = (value, evt) => {
       ctrl.ngModel = ctrl.ngModel || [];
       ctrl.ngModel = ctrl.ngModel.filter(item => {
         return !angular.equals(item, value);
-      })
+      });
+      if(ctrl.closeOnSelectItem == undefined || !ctrl.closeOnSelectItem){
+        evt.stopPropagation();
+      }
     }
 
     ctrl.itemIsSelect = item => {

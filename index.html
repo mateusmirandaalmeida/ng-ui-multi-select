@@ -15,16 +15,42 @@
 
     <main>
       <div class="container">
+
         <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Funcionarios: </label>
+
+              <ui-multi-select placeholder="Buscar..." tagging="" ng-model="selectedItems" close-on-select-item="false">
+                <ui-multi-select-item   ng-repeat="item in selectedItems" ng-value="item">
+                  {{item.nome}}
+                </ui-multi-select-item>
+                <ui-multi-select-option ng-repeat="item in items" ng-value="item">
+                  {{item.nome}}
+                </ui-multi-select-option>
+              </ui-multi-select>
+
+            </div>
+          </div>
+          <div class="col-md-8"><br><br>
+            {{selectedItems}}
+          </div>
+        </div>
+
+        <div class="row" ng-non-bindable>
           <div class="col-md-6">
             <h3>HTML</h3>
             <pre><code style="font-size: 10px;" class="prettyprint">&lt;div class="form-group"&gt;
   &lt;label&gt;Funcionarios: &lt;/label&gt;
-  &lt;ui-multi-select placeholder="Buscar..." ng-model="selectedItems"&gt;
-    &lt;ui-multi-select-item ng-repeat="item in selectedItems" ng-value="item"&gt;
+  &lt;ui-multi-select placeholder="Buscar..."
+                   close-on-select-item="false"
+                   ng-model="selectedItems"&gt;
+    &lt;ui-multi-select-item ng-repeat="item in selectedItems"
+                          ng-value="item"&gt;
       {{item.nome}}
     &lt;/ui-multi-select-item&gt;
-    &lt;ui-multi-select-option ng-repeat="item in items" ng-value="item"&gt;
+    &lt;ui-multi-select-option ng-repeat="item in items"
+                            ng-value="item"&gt;
       {{item.nome}}
     &lt;/ui-multi-select-option&gt;
   &lt;/ui-multi-select&gt;
@@ -46,25 +72,67 @@
           </div>
         </div>
 
-
         <div class="row">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label>Funcionarios: </label>
-              <ui-multi-select placeholder="Buscar..." ng-model="selectedItems">
-                <ui-multi-select-item ng-repeat="item in selectedItems" ng-value="item">
-                  {{item.nome}}
-                </ui-multi-select-item>
-                <ui-multi-select-option ng-repeat="item in items" ng-value="item">
-                  {{item.nome}}
-                </ui-multi-select-option>
-              </ui-multi-select>
+          <div class="col-md-12">
+            <h1>ui-multi-select</h1>
+            <p>
+              Diretiva principal, cria uma input na tela para que o usuário possa selecionar seus itens.
+            </p>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <tr>
+                  <th>
+                    Atributo
+                  </th>
+                  <th>
+                    Descrição
+                  </th>
+                </tr>
+                <tr>
+                  <td>
+                    ng-model
+                  </td>
+                  <td>
+                    [Array] Nome da variável que será armazenado os itens selecionados pelo usuário.
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    placeholder
+                  </td>
+                  <td>
+                    [String] Texto que será mostrado dentro da input.
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    close-on-select-item
+                  </td>
+                  <td>
+                    [Boolean] - Atributo que decide se ao selecionar uma opção, as outras serão ocultadas ou não.
+                  </td>
+                </tr>
+              </table>
             </div>
           </div>
-          <div class="col-md-8"><br><br>
-            {{selectedItems}}
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <h1>ui-multi-select-item</h1>
+            <p>
+              Diretiva responsavél por criar os templates dos itens que estarão selecionados dentro da input.
+            </p>
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-12">
+            <h1>ui-multi-select-option</h1>
+            <p>
+              Diretiva responsavél por mostrar as opções que ainda estão disponíveis para usuário selecionar.
+            </p>
+          </div>
+        </div>
+
       </div>
     </main>
 
