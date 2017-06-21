@@ -1,25 +1,58 @@
 /*MULTI SELECT STYLE*/
 
+.select-clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+.select-clearfix { display: inline-block; }
+/* start commented backslash hack \*/
+* html .select-clearfix { height: 1%; }
+.select-clearfix { display: block; }
+/* close commented backslash hack */
+
 ui-multi-select > div {
   width: 100%;
-  min-height: 40px;
+  min-height: 48px;
   box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);
   display: block;
   font-family: Roboto,Helvetica Neue,sans-serif;
   font-size: 16px;
-  padding: 0;
-  vertical-align: middle;
   position: relative;
   background: #FFFFFF;
   z-index: 999999;
+  padding: 0 0 8px 3px;
+  vertical-align: middle;
 }
 
 ui-multi-select > div .item-container{
-  float: left;
-  margin-left: 5px;
-  padding: 5px 5px 3px 5px;
-  margin-top: 5px;
   background: rgb(238,238,238);
+  cursor: default;
+  border-radius: 16px;
+  display: block;
+  height: 32px;
+  line-height: 32px;
+  margin: 8px 8px 0 0;
+  padding: 0 12px;
+  float: left;
+  box-sizing: border-box;
+  max-width: 100%;
+  position: relative;
+}
+
+ui-multi-select > div .item-container.item-focused{
+  background: #106CC8;
+}
+
+ui-multi-select > div .item-container.item-focused > span{
+  color: #E0ECF8;
+}
+
+ui-multi-select > div .item-container.item-focused > i{
+  color: #E0ECF8;
 }
 
 ui-multi-select > div .item-container{
@@ -42,6 +75,13 @@ ui-multi-select > div .item-container > i:hover{
 }
 
 ui-multi-select > div > input{
+  margin: 8px 8px 0px 5px;
+  display: block;
+  padding: 0;
+  float: left;
+  border: 0;
+  height: 32px;
+  line-height: 32px;
   vertical-align: baseline;
   user-select: text;
   cursor: auto;
@@ -50,20 +90,14 @@ ui-multi-select > div > input{
   text-transform: none;
   text-indent: 0px;
   text-shadow: none;
-  display: inline-block;
   text-align: start;
-  margin: 0em 0em 0em 0em;''
   font: 13.3333px Arial;
   -webkit-appearance: none;
   font-size: 14px;
   box-sizing: border-box;
-  border: none;
   box-shadow: none;
   outline: none;
   background: transparent;
-  padding: 0 15px;
-  line-height: 40px;
-  height: 40px;
 }
 
 ui-multi-select > div > ul{

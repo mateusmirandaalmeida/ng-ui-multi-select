@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 const MultiSelect = {
   require: ['ngModel'],
   transclude: {
@@ -10,10 +12,12 @@ const MultiSelect = {
       <input placeholder="{{$ctrl.placeholder}}"
              data-ng-model="$ctrl.inputValue"
              data-ng-click="$ctrl.open($event)"
-             data-ng-keypress="$ctrl.keyPress($event)"
+             data-ng-focus="$ctrl.removeFocusedItems()"
+             data-ng-keyup="$ctrl.keyPress($event)"
              style="{{$ctrl.ngModel.length == 0 ? 'width: 100%' : ''}}" />
       <ul ng-transclude="options">
       </ul>
+      <span class="select-clearfix"></span>
     </div>
   `,
   bindings: {
@@ -24,6 +28,7 @@ const MultiSelect = {
   },
   controller: ['$scope','$attrs','$timeout','$element', function($scope,$attrs,$timeout,$element){
     let ctrl = this;
+
     ctrl.open = (evt) => {
       if(evt) evt.stopPropagation();
       const ul = $element.find('ul');
@@ -45,8 +50,45 @@ const MultiSelect = {
       }
     }
 
+    ctrl.removeFocusedItems = () => {
+      angular.forEach($element.find('ui-multi-select-item div.item-container'), itemContainer => {
+        angular.element(itemContainer).removeClass('item-focused');
+      })
+    }
+
+    ctrl.applyFocused = item => {
+      ctrl.removeFocusedItems();
+      angular.element(item).addClass('item-focused');
+    }
+
+    ctrl.applyFocusedOrRemoveItem = (items, evt) => {
+      const item = angular.element(items[0]).find('.item-container');
+      const itemScope = item.scope();
+      if(item.hasClass('item-focused')){
+        ctrl.removeItem(itemScope.$ctrl.ngValue, evt);
+        return;
+      }
+      ctrl.applyFocused(item);
+    }
+
+    ctrl.handlingBackspace = (evt) => {
+      const itemFocused = $element.find('ui-multi-select-item div.item-container.item-focused');
+      if(itemFocused && itemFocused[0]){
+        ctrl.applyFocusedOrRemoveItem(angular.element(itemFocused[0].parentNode), evt);
+        return;
+      }
+      const items = $element.find('ui-multi-select-item').last();
+      ctrl.applyFocusedOrRemoveItem(items, evt);
+    }
+
     ctrl.keyPress = evt => {
-      console.log(evt);
+      if(!evt.target.value){
+        switch (evt.keyCode) {
+          case 8:
+            ctrl.handlingBackspace(evt);
+            break;
+        }
+      }
     }
 
     let listenerClick = document.addEventListener('click', event => setTimeout(() => {
@@ -61,7 +103,7 @@ const MultiSelect = {
       if(!ctrl.inputValue) return false;
       let isObject = angular.isObject(option);
       if(ctrl.searchField && isObject){
-
+        return _.get(option, ctrl.searchField).toString().toLowerCase().indexOf(ctrl.inputValue.toLowerCase()) == -1;
       }else if(!ctrl.searchField && isObject){
         let toReturn = true;
         Object.keys(option).forEach(key => {
@@ -88,7 +130,7 @@ const MultiSelect = {
       ctrl.ngModel = ctrl.ngModel.filter(item => {
         return !angular.equals(item, value);
       });
-      if(ctrl.closeOnSelectItem == undefined || !ctrl.closeOnSelectItem){
+      if((ctrl.closeOnSelectItem == undefined || !ctrl.closeOnSelectItem) && evt){
         evt.stopPropagation();
       }
     }

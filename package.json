@@ -7,7 +7,8 @@
     "example": "example"
   },
   "dependencies": {
-    "angular": "1.5.8"
+    "angular": "1.5.8",
+    "lodash": "^4.17.4"
   },
   "babel": {
     "presets": [
@@ -15,27 +16,27 @@
     ]
   },
   "devDependencies": {
-   "angular": "^1.5.8",
-   "babel-core": "^6.18.2",
-   "babel-loader": "^6.2.8",
-   "babel-preset-es2015": "^6.18.0",
-   "babel-preset-react": "^6.16.0",
-   "babel-preset-stage-0": "^6.16.0",
-   "css-loader": "^0.28.2",
-   "extract-text-webpack-plugin": "^2.1.0",
-   "file-loader": "^0.11.1",
-   "script-loader": "^0.7.0",
-   "uglifyjs-webpack-plugin": "^0.4.3",
-   "unminified-webpack-plugin": "^1.1.1",
-   "webpack": "^2.6.0",
-   "webpack-dev-server": "^1.16.2",
-   "webpack-stream": "^3.2.0"
-   },
-   "scripts": {
-     "dev": "webpack-dev-server --config ./webpack.dev.config.js",
-     "prod": "NODE_ENV=production webpack --config ./webpack.production.config.js && webpack --config ./webpack.production.bundle.config",
-     "doc": "node ./docs/create-doc.js"
-   },
+    "angular": "^1.5.8",
+    "babel-core": "^6.18.2",
+    "babel-loader": "^6.2.8",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "css-loader": "^0.28.2",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "file-loader": "^0.11.1",
+    "script-loader": "^0.7.0",
+    "uglifyjs-webpack-plugin": "^0.4.3",
+    "unminified-webpack-plugin": "^1.1.1",
+    "webpack": "^2.6.0",
+    "webpack-dev-server": "^1.16.2",
+    "webpack-stream": "^3.2.0"
+  },
+  "scripts": {
+    "dev": "webpack-dev-server --config ./webpack.dev.config.js",
+    "prod": "NODE_ENV=production webpack --config ./webpack.production.config.js && webpack --config ./webpack.production.bundle.config",
+    "doc": "node ./docs/create-doc.js"
+  },
   "keywords": [
     "gumga",
     "controller",
