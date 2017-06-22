@@ -11,6 +11,7 @@ const MultiSelect = {
       <div ng-transclude="items"></div>
       <input placeholder="{{$ctrl.placeholder}}"
              data-ng-model="$ctrl.inputValue"
+             tabindex="0"
              data-ng-click="$ctrl.open($event)"
              data-ng-focus="$ctrl.removeFocusedItems()"
              data-ng-keyup="$ctrl.keyPress($event)"
@@ -56,9 +57,30 @@ const MultiSelect = {
       })
     }
 
+    ctrl.removeFocusInput = () => {
+      $element.find('input').blur();
+    }
+
+    ctrl.addFocusInput = () => {
+      $timeout(()=> {
+        $element.find('input').click();
+        $element.find('input').focus();
+      },100)
+    }
+
     ctrl.applyFocused = item => {
       ctrl.removeFocusedItems();
       angular.element(item).addClass('item-focused');
+      angular.element(item).focus();
+    }
+
+    ctrl.analyseIfContainsOtherItem = () => {
+      $timeout(()=>{
+        const items = $element.find('ui-multi-select-item').last();
+        if(items && items[0]){
+          ctrl.applyFocused(items.find('.item-container'));
+        }
+      });
     }
 
     ctrl.applyFocusedOrRemoveItem = (items, evt) => {
@@ -66,6 +88,7 @@ const MultiSelect = {
       const itemScope = item.scope();
       if(item.hasClass('item-focused')){
         ctrl.removeItem(itemScope.$ctrl.ngValue, evt);
+        ctrl.analyseIfContainsOtherItem();
         return;
       }
       ctrl.applyFocused(item);
@@ -82,13 +105,20 @@ const MultiSelect = {
     }
 
     ctrl.keyPress = evt => {
-      if(!evt.target.value){
-        switch (evt.keyCode) {
-          case 8:
-            ctrl.handlingBackspace(evt);
-            break;
+      $timeout(()=>{
+        if(!evt.target.value){
+          ctrl.removeFocusInput();
+          switch (evt.keyCode) {
+            case 8:
+              ctrl.close();
+              ctrl.handlingBackspace(evt);
+              break;
+            case 40:
+              // ctrl.handlingBackspace(evt);
+              break;
+          }
         }
-      }
+      });;
     }
 
     let listenerClick = document.addEventListener('click', event => setTimeout(() => {
@@ -126,10 +156,12 @@ const MultiSelect = {
     }
 
     ctrl.removeItem = (value, evt) => {
-      ctrl.ngModel = ctrl.ngModel || [];
-      ctrl.ngModel = ctrl.ngModel.filter(item => {
-        return !angular.equals(item, value);
-      });
+      $timeout(()=>{
+        ctrl.ngModel = ctrl.ngModel || [];
+        ctrl.ngModel = ctrl.ngModel.filter(item => {
+          return !angular.equals(item, value);
+        });
+      })
       if((ctrl.closeOnSelectItem == undefined || !ctrl.closeOnSelectItem) && evt){
         evt.stopPropagation();
       }

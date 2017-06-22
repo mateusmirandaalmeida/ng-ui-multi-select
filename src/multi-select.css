@@ -41,10 +41,16 @@ ui-multi-select > div .item-container{
   box-sizing: border-box;
   max-width: 100%;
   position: relative;
+  outline: none;
+}
+
+ui-multi-select > div .item-container:focus, ui-multi-select > div .item-container:active{
+  outline: none;
 }
 
 ui-multi-select > div .item-container.item-focused{
   background: #106CC8;
+  outline: none;
 }
 
 ui-multi-select > div .item-container.item-focused > span{
