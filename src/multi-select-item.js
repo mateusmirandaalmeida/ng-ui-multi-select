@@ -35,12 +35,15 @@ const MultiSelectItem = {
       const nextElement = angular.element(evt.target.parentNode).next();
       if(nextElement && nextElement[0]){
         ctrl.uiMultiSelectCtrl.applyFocused(nextElement.find('div.item-container'));
+      }else{
+        ctrl.uiMultiSelectCtrl.addFocusInput();
       }
     }
 
     document.addEventListener('keydown', evt => {
       if(evt.keyCode == 9 && ctrl.ngValue && $element.find('div.item-container').hasClass('item-focused')){
         ctrl.uiMultiSelectCtrl.addFocusInput();
+        ctrl.uiMultiSelectCtrl.open();
       }
     })
 

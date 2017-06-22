@@ -106,17 +106,20 @@ const MultiSelect = {
 
     ctrl.keyPress = evt => {
       $timeout(()=>{
-        if(!evt.target.value){
-          ctrl.removeFocusInput();
-          switch (evt.keyCode) {
-            case 8:
+        ctrl.removeFocusInput();
+        switch (evt.keyCode) {
+          case 8:
+            if(!evt.target.value){
               ctrl.close();
               ctrl.handlingBackspace(evt);
-              break;
-            case 40:
-              // ctrl.handlingBackspace(evt);
-              break;
-          }
+            }
+            break;
+          case 37:
+            if(!evt.target.value){
+              ctrl.close();
+              ctrl.handlingBackspace(evt);
+            }
+            break;
         }
       });;
     }
