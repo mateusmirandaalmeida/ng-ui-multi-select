@@ -79,6 +79,8 @@ const MultiSelect = {
         const items = $element.find('ui-multi-select-item').last();
         if(items && items[0]){
           ctrl.applyFocused(items.find('.item-container'));
+        }else{
+          ctrl.addFocusInput();
         }
       });
     }
@@ -104,22 +106,95 @@ const MultiSelect = {
       ctrl.applyFocusedOrRemoveItem(items, evt);
     }
 
+    ctrl.getFirstOption = () => {
+      return $element.find('ui-multi-select-option').find('li.option-container').first();
+    }
+
+    ctrl.getLastOption = () => {
+      return $element.find('ui-multi-select-option').find('li.option-container').last();
+    }
+
+    ctrl.nextOption = (evt, elm) => {
+      evt.preventDefault();
+      evt.stopPropagation();
+      $timeout(()=>{
+        const next = elm.next();
+        if(next && next[0] && next.find('li')[0]){
+          elm.find('li.option-container').removeClass('option-focused');
+          next.find('li.option-container').addClass('option-focused');
+        }else{
+          elm.find('li.option-container').removeClass('option-focused');
+          ctrl.getFirstOption().addClass('option-focused');
+        }
+      });
+    }
+
+    ctrl.prevOption = (evt, elm) => {
+      evt.preventDefault();
+      evt.stopPropagation();
+      const previous = elm.prev();
+      if(previous && previous[0] && previous.find('li')[0]){
+        elm.find('li.option-container').removeClass('option-focused');
+        previous.find('li.option-container').addClass('option-focused');
+      } else{
+        elm.find('li.option-container').removeClass('option-focused');
+        ctrl.getLastOption().addClass('option-focused');
+      }
+    }
+
+    ctrl.handligButtonUp = (evt) => {
+      const liFocused = $element.find('ui-multi-select-option').find('li.option-container.option-focused');
+      if(liFocused && liFocused[0]){
+        ctrl.prevOption(evt, angular.element(liFocused[0].parentNode));
+      }
+    }
+
+    ctrl.handligButtonDown = (evt) => {
+      const liFocused = $element.find('ui-multi-select-option').find('li.option-container.option-focused');
+      if(liFocused && liFocused[0]){
+        ctrl.nextOption(evt, angular.element(liFocused[0].parentNode));
+      }else{
+        const options = $element.find('ui-multi-select-option').find('li.option-container');
+        if(options.length > 0){
+          options.first().addClass('option-focused');
+        }
+      }
+    }
+
     ctrl.keyPress = evt => {
       $timeout(()=>{
-        ctrl.removeFocusInput();
         switch (evt.keyCode) {
           case 8:
             if(!evt.target.value){
               ctrl.close();
+              ctrl.removeFocusInput();
               ctrl.handlingBackspace(evt);
             }
             break;
           case 37:
             if(!evt.target.value){
+              ctrl.removeFocusInput();
               ctrl.close();
               ctrl.handlingBackspace(evt);
             }
             break;
+          case 40:
+              evt.stopPropagation();
+              if(!ctrl.opened){
+                ctrl.open();
+              }
+              ctrl.handligButtonDown(evt);
+            break;
+          case 38:
+              evt.stopPropagation();
+              ctrl.handligButtonUp(evt);
+              break;
+          case 13:
+              const liFocused = $element.find('ui-multi-select-option').find('li.option-container.option-focused');
+              if(liFocused && liFocused[0]){
+                // ctrl.addItem(liFocused.scope().$ctrl.ngValue, evt);
+              }
+              break;
         }
       });;
     }

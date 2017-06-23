@@ -1,8 +1,10 @@
 const TEMPLATE = `
   <li ng-transclude
-      data-ng-if="!$ctrl.uiMultiSelectCtrl.itemIsSelect($ctrl.ngValue)"
-      data-ng-hide="$ctrl.uiMultiSelectCtrl.filterOptions($ctrl.ngValue)"
-      data-ng-click="$ctrl.uiMultiSelectCtrl.addItem($ctrl.ngValue, $event)">
+      class="option-container"
+      tabindex="1"
+      ng-if="!$ctrl.uiMultiSelectCtrl.itemIsSelect($ctrl.ngValue)"
+      ng-hide="$ctrl.uiMultiSelectCtrl.filterOptions($ctrl.ngValue)"
+      ng-click="$ctrl.uiMultiSelectCtrl.addItem($ctrl.ngValue, $event)">
   </li>
 `;
 

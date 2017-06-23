@@ -53,7 +53,7 @@ ui-multi-select > div .item-container.item-focused{
   outline: none;
 }
 
-ui-multi-select > div > ul > li.option-focused{
+ui-multi-select-option li.option-focused{
   background: rgb(238,238,238);
   outline: none;
 }
