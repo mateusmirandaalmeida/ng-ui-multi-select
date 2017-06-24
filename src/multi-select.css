@@ -58,6 +58,10 @@ ui-multi-select-option li.option-focused{
   outline: none;
 }
 
+ui-multi-select-option li.option-focused:active, ui-multi-select-option li.option-focused:focus{
+  outline: none;
+}
+
 ui-multi-select > div .item-container.item-focused > span{
   color: #E0ECF8;
 }

@@ -23,14 +23,16 @@
             </div>
             <div class="form-group">
               <label>Funcionarios: </label>
+
               <ui-multi-select placeholder="Buscar..." ng-model="selectedItems" close-on-select-item="false">
                 <ui-multi-select-item   ng-repeat="item in selectedItems" ng-value="item">
-                  {{item.nome}}
+                  {{item}}
                 </ui-multi-select-item>
-                <ui-multi-select-option ng-repeat="option in items" ng-value="option">
-                  {{option.nome}}
+                <ui-multi-select-option ng-repeat="option in items" ng-value="option.name">
+                  {{option.name}}
                 </ui-multi-select-option>
               </ui-multi-select>
+
              </div>
 
           </div>
@@ -144,17 +146,22 @@
     <script type="text/javascript" src="dist/ng-ui-multi-select.js"></script>
 
     <script type="text/javascript">
-      angular.module('app', ['ngUiMultiSelect']).controller('ctrl', function($scope, $timeout){
+      angular.module('app', ['ngUiMultiSelect']).controller('ctrl', function($scope, $timeout, $http){
 
-          $scope.selectedItems = [{"nome":"Mateus","idade":20}];
+          $scope.selectedItems = ["GumgaAdmin","User Shared munif.com.br","Munif Gebara Junior"];
+          $scope.items = [];
 
-          $scope.items = [
-            { nome: 'Mateus',  idade: 20},
-            { nome: 'Thalita', idade: 19},
-            { nome: 'Willian', idade: 25},
-            { nome: 'Felipe',  idade: 25},
-            { nome: 'Munif',   idade: 50}
-          ]
+          $http.get('https://gumga.io/security-api/api/user?gumgaToken=eterno').then(function(resp){
+            $scope.items = resp.data.values;
+          })
+
+          // $scope.items = [
+          //   { nome: 'Mateus',  idade: 20},
+          //   { nome: 'Thalita', idade: 19},
+          //   { nome: 'Willian', idade: 25},
+          //   { nome: 'Felipe',  idade: 25},
+          //   { nome: 'Munif',   idade: 50}
+          // ]
       })
     </script>
 

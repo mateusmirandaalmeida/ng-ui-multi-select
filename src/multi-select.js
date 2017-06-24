@@ -123,8 +123,13 @@ const MultiSelect = {
           elm.find('li.option-container').removeClass('option-focused');
           next.find('li.option-container').addClass('option-focused');
         }else{
-          elm.find('li.option-container').removeClass('option-focused');
-          ctrl.getFirstOption().addClass('option-focused');
+          if(next[0] && next[0].classList.contains('ng-isolate-scope')){
+            elm.find('li.option-container').removeClass('option-focused');
+            ctrl.nextOption(evt, next);
+          }else{
+            elm.find('li.option-container').removeClass('option-focused');
+            ctrl.getFirstOption().addClass('option-focused');
+          }
         }
       });
     }
@@ -137,8 +142,13 @@ const MultiSelect = {
         elm.find('li.option-container').removeClass('option-focused');
         previous.find('li.option-container').addClass('option-focused');
       } else{
-        elm.find('li.option-container').removeClass('option-focused');
-        ctrl.getLastOption().addClass('option-focused');
+        if(previous[0] && previous[0].classList.contains('ng-isolate-scope')){
+          elm.find('li.option-container').removeClass('option-focused');
+          ctrl.prevOption(evt, previous);
+        }else{
+          elm.find('li.option-container').removeClass('option-focused');
+          ctrl.getLastOption().addClass('option-focused');
+        }
       }
     }
 
@@ -162,41 +172,41 @@ const MultiSelect = {
     }
 
     ctrl.keyPress = evt => {
-      $timeout(()=>{
-        switch (evt.keyCode) {
-          case 8:
-            if(!evt.target.value){
-              ctrl.close();
-              ctrl.removeFocusInput();
-              ctrl.handlingBackspace(evt);
+      evt.stopPropagation();
+      const value = $element.find('input').val();
+      switch (evt.keyCode) {
+        case 8:
+          if(!value){
+            ctrl.close();
+            ctrl.removeFocusInput();
+            ctrl.handlingBackspace(evt);
+          }
+          break;
+        case 37:
+          if(!value){
+            ctrl.removeFocusInput();
+            ctrl.close();
+            ctrl.handlingBackspace(evt);
+          }
+          break;
+        case 40:
+            evt.stopPropagation();
+            if(!ctrl.opened){
+              ctrl.open();
+            }
+            ctrl.handligButtonDown(evt);
+          break;
+        case 38:
+            evt.stopPropagation();
+            ctrl.handligButtonUp(evt);
+            break;
+        case 13:
+            const liFocused = $element.find('ui-multi-select-option').find('li.option-container.option-focused');
+            if(liFocused && liFocused[0]){
+              ctrl.addItem(liFocused.scope().$ctrl.ngValue, evt);
             }
             break;
-          case 37:
-            if(!evt.target.value){
-              ctrl.removeFocusInput();
-              ctrl.close();
-              ctrl.handlingBackspace(evt);
-            }
-            break;
-          case 40:
-              evt.stopPropagation();
-              if(!ctrl.opened){
-                ctrl.open();
-              }
-              ctrl.handligButtonDown(evt);
-            break;
-          case 38:
-              evt.stopPropagation();
-              ctrl.handligButtonUp(evt);
-              break;
-          case 13:
-              const liFocused = $element.find('ui-multi-select-option').find('li.option-container.option-focused');
-              if(liFocused && liFocused[0]){
-                // ctrl.addItem(liFocused.scope().$ctrl.ngValue, evt);
-              }
-              break;
-        }
-      });;
+      }
     }
 
     let listenerClick = document.addEventListener('click', event => setTimeout(() => {

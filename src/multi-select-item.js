@@ -16,7 +16,6 @@ const MultiSelectItem = {
   controller: ['$scope','$attrs','$timeout','$element', function($scope,$attrs,$timeout,$element){
     let ctrl = this;
 
-
     ctrl.$onInit = () => {
     }
 
