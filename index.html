@@ -19,17 +19,18 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <input type="text" >
+              <input type="text" ng-model="registro.nome" class="form-control"> <br><br>
+              <button type="button" ng-click="disabled = !disabled">Habilitar/Desabilitar funcionarios</button>
             </div>
             <div class="form-group">
               <label>Funcionarios: </label>
 
-              <ui-multi-select placeholder="Buscar..." ng-model="selectedItems" close-on-select-item="false">
-                <ui-multi-select-item   ng-repeat="item in selectedItems" ng-value="item">
-                  {{item}}
+              <ui-multi-select placeholder="Buscar..." ng-model="registro.funcionarios" close-on-select-item="false" ng-disabled="disabled">
+                <ui-multi-select-item   ng-repeat="item in registro.funcionarios" ng-value="item">
+                  {{item.nome}}
                 </ui-multi-select-item>
-                <ui-multi-select-option ng-repeat="option in items" ng-value="option.name">
-                  {{option.name}}
+                <ui-multi-select-option ng-repeat="option in items" ng-value="option" ng-disabled="option.idade == 19">
+                  {{option.nome}}
                 </ui-multi-select-option>
               </ui-multi-select>
 
@@ -37,7 +38,7 @@
 
           </div>
           <div class="col-md-8"><br><br>
-            {{selectedItems}}
+            {{registro}}
           </div>
         </div>
 
@@ -113,7 +114,7 @@
                     close-on-select-item
                   </td>
                   <td>
-                    [Boolean] - Atributo que decide se ao selecionar uma opção, as outras serão ocultadas ou não.
+                    [Boolean] - Atributo que decide se vai fechar ou não a caixa de opções.
                   </td>
                 </tr>
               </table>
@@ -148,20 +149,18 @@
     <script type="text/javascript">
       angular.module('app', ['ngUiMultiSelect']).controller('ctrl', function($scope, $timeout, $http){
 
-          $scope.selectedItems = ["GumgaAdmin","User Shared munif.com.br","Munif Gebara Junior"];
-          $scope.items = [];
+          $scope.registro = {
+            nome: 'Mateus Miranda',
+            funcionarios : []
+          }
 
-          $http.get('https://gumga.io/security-api/api/user?gumgaToken=eterno').then(function(resp){
-            $scope.items = resp.data.values;
-          })
-
-          // $scope.items = [
-          //   { nome: 'Mateus',  idade: 20},
-          //   { nome: 'Thalita', idade: 19},
-          //   { nome: 'Willian', idade: 25},
-          //   { nome: 'Felipe',  idade: 25},
-          //   { nome: 'Munif',   idade: 50}
-          // ]
+          $scope.items = [
+            { nome: 'Mateus',  idade: 20},
+            { nome: 'Thalita', idade: 19},
+            { nome: 'Willian', idade: 25},
+            { nome: 'Felipe',  idade: 25},
+            { nome: 'Munif',   idade: 50}
+          ]
       })
     </script>
 

@@ -14,6 +14,16 @@
 .select-clearfix { display: block; }
 /* close commented backslash hack */
 
+ui-multi-select .item-disabled{
+  opacity: 0.7;
+}
+
+ui-multi-select .option-disabled{
+  opacity: 0.5;
+  background: #FFFFFF !important;
+  cursor: default !important;
+}
+
 ui-multi-select > div {
   width: 100%;
   min-height: 48px;
@@ -58,7 +68,7 @@ ui-multi-select-option li.option-focused{
   outline: none;
 }
 
-ui-multi-select-option li.option-focused:active, ui-multi-select-option li.option-focused:focus{
+ui-multi-select-option li.option-container:active, ui-multi-select-option li.option-container:focus{
   outline: none;
 }
 
@@ -126,10 +136,17 @@ ui-multi-select > div > ul{
   padding: 0;
   background: #FFFFFF;
   display: none;
+  max-height: 192px;
+  overflow: auto;
 }
 
 ui-multi-select > div > ul.open{
   display: block;
+}
+
+ui-multi-select .item-disabled i{
+  cursor: default !important;
+  color: #5f5b5b !important;
 }
 
 ui-multi-select > div > ul li{

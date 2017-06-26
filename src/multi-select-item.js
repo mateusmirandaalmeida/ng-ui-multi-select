@@ -1,6 +1,10 @@
 const TEMPLATE = `
-  <div class="item-container" tabindex="-1" ng-click="$ctrl.applyFocused($event);"><span ng-transclude></span>
-    <i data-ng-click="$ctrl.uiMultiSelectCtrl.removeItem($ctrl.ngValue, $event)">X</i>
+  <div class="item-container"
+       tabindex="-1"
+       data-ng-disabled="$ctrl.uiMultiSelectCtrl.ngDisabled || $ctrl.ngDisabled"
+       data-ng-class="{'item-disabled' : ($ctrl.uiMultiSelectCtrl.ngDisabled || $ctrl.ngDisabled)}"
+       data-ng-click="$ctrl.applyFocused($event);"><span ng-transclude></span>
+    <i data-ng-click="$ctrl.removeItem($event)">X</i>
   </div>
 `;
 
@@ -11,7 +15,8 @@ const MultiSelectItem = {
     uiMultiSelectCtrl: '^uiMultiSelect'
   },
   bindings: {
-    ngValue: '='
+    ngValue   : '=',
+    ngDisabled: '=?'
   },
   controller: ['$scope','$attrs','$timeout','$element', function($scope,$attrs,$timeout,$element){
     let ctrl = this;
@@ -19,21 +24,54 @@ const MultiSelectItem = {
     ctrl.$onInit = () => {
     }
 
+    ctrl.removeItem = ($event) => {
+      if(ctrl.uiMultiSelectCtrl.ngDisabled || ctrl.ngDisabled) return;
+      ctrl.uiMultiSelectCtrl.removeItem(ctrl.ngValue, $event);
+    }
+
     ctrl.applyFocused = (evt) => {
+      if(ctrl.uiMultiSelectCtrl.ngDisabled || ctrl.ngDisabled) return;
       ctrl.uiMultiSelectCtrl.applyFocused($element.find('div.item-container'));
+    }
+
+    const getPrev = (elm) => {
+      if(elm.classList.contains('item-disabled')){
+        if(elm.prev){
+          return getPrev(elm.prev());
+        }
+        return;
+      }
+      return elm;
     }
 
     ctrl.moveFocusToLeft = (evt) => {
       const previousElement = angular.element(evt.target.parentNode).prev();
       if(previousElement && previousElement[0]){
-        ctrl.uiMultiSelectCtrl.applyFocused(previousElement.find('div.item-container'));
+        var prev = getPrev(previousElement.find('div.item-container')[0]);
+        if(prev){
+          ctrl.uiMultiSelectCtrl.applyFocused(prev);
+        }
       }
+    }
+
+    const getNext = (elm) => {
+      if(elm.classList.contains('item-disabled')){
+        if(elm.next){
+          return getNext(elm.next());
+        }
+        return;
+      }
+      return elm;
     }
 
     ctrl.moveFocusToRight = (evt) => {
       const nextElement = angular.element(evt.target.parentNode).next();
       if(nextElement && nextElement[0]){
-        ctrl.uiMultiSelectCtrl.applyFocused(nextElement.find('div.item-container'));
+        var next = getNext(nextElement.find('div.item-container')[0]);
+        if(next){
+          ctrl.uiMultiSelectCtrl.applyFocused(next);
+        }
+        return;
       }else{
         ctrl.uiMultiSelectCtrl.addFocusInput();
       }

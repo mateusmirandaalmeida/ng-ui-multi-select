@@ -12,20 +12,23 @@ const MultiSelect = {
       <input placeholder="{{$ctrl.placeholder}}"
              data-ng-model="$ctrl.inputValue"
              tabindex="0"
+             ng-class="{'item-disabled' : $ctrl.ngDisabled}"
              data-ng-click="$ctrl.open($event)"
+             data-ng-disabled="$ctrl.ngDisabled"
              data-ng-focus="$ctrl.removeFocusedItems()"
              data-ng-keyup="$ctrl.keyPress($event)"
              style="{{$ctrl.ngModel.length == 0 ? 'width: 100%' : ''}}" />
-      <ul ng-transclude="options">
+      <ul ng-transclude="options" class="options">
       </ul>
       <span class="select-clearfix"></span>
     </div>
   `,
   bindings: {
-    ngModel    : '=',
+    ngModel            : '=',
+    ngDisabled         : '=?',
     closeOnSelectItem  : '=?',
-    placeholder: '@?',
-    searchField: '@?'
+    placeholder        : '@?',
+    searchField        : '@?'
   },
   controller: ['$scope','$attrs','$timeout','$element', function($scope,$attrs,$timeout,$element){
     let ctrl = this;
@@ -35,7 +38,7 @@ const MultiSelect = {
       const ul = $element.find('ul');
       if(ul && ul[0]){
         ul[0].classList.add('open');
-        setTimeout(()=>{
+        $timeout(()=>{
           ctrl.opened = true;
         }, 500)
       }
@@ -61,9 +64,11 @@ const MultiSelect = {
       $element.find('input').blur();
     }
 
-    ctrl.addFocusInput = () => {
-      $timeout(()=> {
-        $element.find('input').click();
+    ctrl.addFocusInput = (ignoreClique) => {
+      $timeout(() => {
+        if(!ignoreClique){
+          $element.find('input').click();
+        }
         $element.find('input').focus();
       },100)
     }
@@ -114,14 +119,30 @@ const MultiSelect = {
       return $element.find('ui-multi-select-option').find('li.option-container').last();
     }
 
+    const setScrollInOptionFocused = () => {
+      const liFocused = $element.find('ui-multi-select-option').find('li.option-container.option-focused');
+      if(liFocused && liFocused[0]){
+        let container = $element.find('ul.options');
+        let scrollTo  = liFocused;
+        container.animate({
+          scrollTop: scrollTo.offset().top - container.offset().top + container.scrollTop()
+        }, 100);
+      }
+    }
+
     ctrl.nextOption = (evt, elm) => {
       evt.preventDefault();
       evt.stopPropagation();
       $timeout(()=>{
         const next = elm.next();
         if(next && next[0] && next.find('li')[0]){
-          elm.find('li.option-container').removeClass('option-focused');
-          next.find('li.option-container').addClass('option-focused');
+          if(next.find('li.option-container')[0].classList.contains('option-disabled')){
+            elm.find('li.option-container').removeClass('option-focused');
+            ctrl.nextOption(evt, next);
+          }else{
+            elm.find('li.option-container').removeClass('option-focused');
+            next.find('li.option-container').addClass('option-focused');
+          }
         }else{
           if(next[0] && next[0].classList.contains('ng-isolate-scope')){
             elm.find('li.option-container').removeClass('option-focused');
@@ -131,6 +152,7 @@ const MultiSelect = {
             ctrl.getFirstOption().addClass('option-focused');
           }
         }
+        setScrollInOptionFocused();
       });
     }
 
@@ -139,10 +161,15 @@ const MultiSelect = {
       evt.stopPropagation();
       const previous = elm.prev();
       if(previous && previous[0] && previous.find('li')[0]){
-        elm.find('li.option-container').removeClass('option-focused');
-        previous.find('li.option-container').addClass('option-focused');
+        if(previous.find('li.option-container')[0].classList.contains('option-disabled')){
+          elm.find('li.option-container').removeClass('option-focused');
+          ctrl.prevOption(evt, previous);
+        }else{
+          elm.find('li.option-container').removeClass('option-focused');
+          previous.find('li.option-container').addClass('option-focused');
+        }
       } else{
-        if(previous[0] && previous[0].classList.contains('ng-isolate-scope')){
+        if((previous[0] && previous[0].classList.contains('ng-isolate-scope'))){
           elm.find('li.option-container').removeClass('option-focused');
           ctrl.prevOption(evt, previous);
         }else{
@@ -150,6 +177,7 @@ const MultiSelect = {
           ctrl.getLastOption().addClass('option-focused');
         }
       }
+      setScrollInOptionFocused();
     }
 
     ctrl.handligButtonUp = (evt) => {
@@ -164,7 +192,7 @@ const MultiSelect = {
       if(liFocused && liFocused[0]){
         ctrl.nextOption(evt, angular.element(liFocused[0].parentNode));
       }else{
-        const options = $element.find('ui-multi-select-option').find('li.option-container');
+        const options = $element.find('ui-multi-select-option').find('li.option-container.option-enabled');
         if(options.length > 0){
           options.first().addClass('option-focused');
         }
@@ -204,18 +232,17 @@ const MultiSelect = {
             const liFocused = $element.find('ui-multi-select-option').find('li.option-container.option-focused');
             if(liFocused && liFocused[0]){
               ctrl.addItem(liFocused.scope().$ctrl.ngValue, evt);
+              ctrl.handligButtonUp(evt);
             }
             break;
       }
     }
 
-    let listenerClick = document.addEventListener('click', event => setTimeout(() => {
+    let listenerClick = document.addEventListener('click', event => $timeout(() => {
       ctrl.close()
     }));
 
-    $scope.$on('$destroy', () => {
-      document.removeEventListener('click', listenerClick);
-    })
+    $scope.$on('$destroy', () => document.removeEventListener('click', listenerClick));
 
     ctrl.filterOptions = option => {
       if(!ctrl.inputValue) return false;
@@ -244,6 +271,7 @@ const MultiSelect = {
     }
 
     ctrl.removeItem = (value, evt) => {
+      if(ctrl.ngDisabled) return;
       $timeout(()=>{
         ctrl.ngModel = ctrl.ngModel || [];
         ctrl.ngModel = ctrl.ngModel.filter(item => {
