@@ -1,6 +1,6 @@
 {
   "name": "ng-ui-multi-select",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "ng-ui-multi-select",
   "main": "./src/index.js",
   "directories": {
