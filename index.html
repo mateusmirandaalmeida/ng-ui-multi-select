@@ -2,7 +2,7 @@
 <html ng-app="app">
   <head>
     <meta charset="utf-8">
-    <title>ng-easy-infinite-scroll</title>
+    <title>ng-ui-multi-select</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="dist/ng-ui-multi-select.css">
   </head>
@@ -59,11 +59,16 @@
 
 
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-12">
             <div class="form-group">
               <label>Funcionarios: </label>
 
-              <ui-multi-select placeholder="Buscar..." ng-model="funcionarios" close-on-select-item="false" ng-disabled="disabled">
+              <ui-multi-select placeholder="Buscar..."
+                               ng-model="funcionarios"
+                               close-on-select-item="false"
+                               tagging="addItem(value)"
+                               tagging-model="items"
+                               ng-disabled="disabled">
                 <ui-multi-select-item   ng-repeat="item in funcionarios" ng-value="item">
                   {{item.nome}}
                 </ui-multi-select-item>
@@ -75,6 +80,7 @@
              </div>
 
           </div>
+
           <div class="col-md-8">
             <label>Model: </label>
             <pre>{{funcionarios|json}}</pre>
@@ -88,7 +94,9 @@
   &lt;label&gt;Funcionarios: &lt;/label&gt;
   &lt;ui-multi-select placeholder="Buscar..."
                    close-on-select-item="false"
-                   ng-model="funcionarios"&gt;
+                   ng-model="funcionarios"
+                   tagging="addItem(value)"
+                   tagging-model="items"&gt;
     &lt;ui-multi-select-item ng-repeat="item in funcionarios"
                           ng-value="item"&gt;
       {{item.nome}}
@@ -104,14 +112,19 @@
             <h3>JavaScript</h3>
             <pre><code style="font-size: 10px;" class="prettyprint">angular.module('app', ['ngUiMultiSelect'])
 .controller('ctrl', function($scope, $timeout){
-    $scope.selectedItems = [{"nome":"Mateus","idade":20}];
+    $scope.selectedItems = [];
+
     $scope.items = [
       { nome: 'Mateus',  idade: 20},
       { nome: 'Thalita', idade: 19},
       { nome: 'Willian', idade: 25},
       { nome: 'Felipe',  idade: 25},
       { nome: 'Munif',   idade: 50}
-    ]
+    ];
+
+    $scope.addItem = function(value){
+      return { nome: value }
+    };
 })</code></pre>
           </div>
         </div>
@@ -162,6 +175,22 @@
                   </td>
                   <td>
                     [Boolean] - Atributo que decide se vai fechar ou não a caixa de opções.
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    tagging
+                  </td>
+                  <td>
+                    [Function] - Função que será executada ao teclar enter para adicionar objeto na lista.
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    tagging-model
+                  </td>
+                  <td>
+                    [Array] - Opções disponíveis para selecionar.
                   </td>
                 </tr>
               </table>
@@ -254,13 +283,18 @@
 
           $scope.funcionarios = [];
 
+          $scope.addItem = function(value){
+            return { nome: value}
+          }
+
           $scope.items = [
             { nome: 'Mateus',  idade: 20},
             { nome: 'Thalita', idade: 19},
             { nome: 'Willian', idade: 25},
             { nome: 'Felipe',  idade: 25},
             { nome: 'Munif',   idade: 50}
-          ]
+          ];
+
       })
     </script>
 

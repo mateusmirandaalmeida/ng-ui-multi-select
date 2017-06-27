@@ -84,9 +84,26 @@ const MultiSelectItem = {
     }
 
     document.addEventListener('keydown', evt => {
-      if(evt.keyCode == 9 && ctrl.ngValue && $element.find('div.item-container').hasClass('item-focused')){
-        ctrl.uiMultiSelectCtrl.addFocusInput();
-        ctrl.uiMultiSelectCtrl.open();
+      if(ctrl.ngValue && $element.find('div.item-container').hasClass('item-focused')){
+        switch (evt.keyCode) {
+          case 8:
+            ctrl.uiMultiSelectCtrl.handlingBackspace(evt);
+            evt.stopPropagation()
+            break;
+          case 9:
+            ctrl.uiMultiSelectCtrl.addFocusInput();
+            ctrl.uiMultiSelectCtrl.open();
+            break;
+          case 37:
+            ctrl.moveFocusToLeft(evt);
+            break;
+          case 46:
+            ctrl.uiMultiSelectCtrl.handlingBackspace(evt);
+            break;
+          case 39:
+            ctrl.moveFocusToRight(evt);
+            break;
+        }
       }
     })
 
@@ -94,20 +111,8 @@ const MultiSelectItem = {
       $timeout(() => {
         if(ctrl.ngValue && $element.find('div.item-container')[0].classList.contains('item-focused')){
           switch (evt.keyCode) {
-            case 8:
-              ctrl.uiMultiSelectCtrl.handlingBackspace(evt);
-              break;
             case 9:
               ctrl.uiMultiSelectCtrl.addFocusInput();
-              break;
-            case 46:
-              ctrl.uiMultiSelectCtrl.handlingBackspace(evt);
-              break;
-            case 37:
-              ctrl.moveFocusToLeft(evt);
-              break;
-            case 39:
-              ctrl.moveFocusToRight(evt);
               break;
           }
         }

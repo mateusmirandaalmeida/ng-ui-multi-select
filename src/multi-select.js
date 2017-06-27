@@ -28,7 +28,9 @@ const MultiSelect = {
     ngDisabled         : '=?',
     closeOnSelectItem  : '=?',
     placeholder        : '@?',
-    searchField        : '@?'
+    searchField        : '@?',
+    tagging            : '&?',
+    taggingModel       : '=?'
   },
   controller: ['$scope','$attrs','$timeout','$element', function($scope,$attrs,$timeout,$element){
     let ctrl = this;
@@ -244,9 +246,21 @@ const MultiSelect = {
         case 13:
             if(!ctrl.opened) return;
             const liFocused = $element.find('ui-multi-select-option').find('li.option-container.option-focused');
-            if(liFocused && liFocused[0]){
+            if(liFocused && liFocused[0] && !liFocused.hasClass('ng-hide')){
               ctrl.addItem(liFocused.scope().$ctrl.ngValue, evt);
               ctrl.handligButtonUp(evt);
+            }else{
+              const value = $element.find('input').val();
+              if (ctrl.tagging && ctrl.taggingModel && value && value.trim() != "") {
+                let result = ctrl.tagging({
+                  value: value
+                });
+                if (result != null && result != undefined) {
+                  ctrl.addTagging(result);
+                  ctrl.addItem(result, evt);
+                  delete ctrl.inputValue
+                }
+              }
             }
             break;
       }
@@ -258,6 +272,12 @@ const MultiSelect = {
     }));
 
     $scope.$on('$destroy', () => document.removeEventListener('click', listenerClick));
+
+    ctrl.addTagging = (result) => {
+      if(!ctrl.taggingModel.filter((tagging) => angular.equals(tagging, result)).length > 0){
+        ctrl.taggingModel.push(result);
+      }
+    }
 
     ctrl.filterOptions = option => {
       if(!ctrl.inputValue) return false;
@@ -293,7 +313,7 @@ const MultiSelect = {
 
     ctrl.removeItem = (value, evt) => {
       if(ctrl.ngDisabled) return;
-      $timeout(()=>{
+      $timeout(() => {
         ctrl.ngModel = ctrl.ngModel || [];
         ctrl.ngModel = ctrl.ngModel.filter(item => {
           return !angular.equals(item, value);

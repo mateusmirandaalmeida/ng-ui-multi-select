@@ -153,9 +153,26 @@ var MultiSelectItem = {
     };
 
     document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode == 9 && ctrl.ngValue && $element.find('div.item-container').hasClass('item-focused')) {
-        ctrl.uiMultiSelectCtrl.addFocusInput();
-        ctrl.uiMultiSelectCtrl.open();
+      if (ctrl.ngValue && $element.find('div.item-container').hasClass('item-focused')) {
+        switch (evt.keyCode) {
+          case 8:
+            ctrl.uiMultiSelectCtrl.handlingBackspace(evt);
+            evt.stopPropagation();
+            break;
+          case 9:
+            ctrl.uiMultiSelectCtrl.addFocusInput();
+            ctrl.uiMultiSelectCtrl.open();
+            break;
+          case 37:
+            ctrl.moveFocusToLeft(evt);
+            break;
+          case 46:
+            ctrl.uiMultiSelectCtrl.handlingBackspace(evt);
+            break;
+          case 39:
+            ctrl.moveFocusToRight(evt);
+            break;
+        }
       }
     });
 
@@ -163,20 +180,8 @@ var MultiSelectItem = {
       $timeout(function () {
         if (ctrl.ngValue && $element.find('div.item-container')[0].classList.contains('item-focused')) {
           switch (evt.keyCode) {
-            case 8:
-              ctrl.uiMultiSelectCtrl.handlingBackspace(evt);
-              break;
             case 9:
               ctrl.uiMultiSelectCtrl.addFocusInput();
-              break;
-            case 46:
-              ctrl.uiMultiSelectCtrl.handlingBackspace(evt);
-              break;
-            case 37:
-              ctrl.moveFocusToLeft(evt);
-              break;
-            case 39:
-              ctrl.moveFocusToRight(evt);
               break;
           }
         }
@@ -253,7 +258,9 @@ var MultiSelect = {
     ngDisabled: '=?',
     closeOnSelectItem: '=?',
     placeholder: '@?',
-    searchField: '@?'
+    searchField: '@?',
+    tagging: '&?',
+    taggingModel: '=?'
   },
   controller: ['$scope', '$attrs', '$timeout', '$element', function ($scope, $attrs, $timeout, $element) {
     var ctrl = this;
@@ -469,9 +476,21 @@ var MultiSelect = {
         case 13:
           if (!ctrl.opened) return;
           var liFocused = $element.find('ui-multi-select-option').find('li.option-container.option-focused');
-          if (liFocused && liFocused[0]) {
+          if (liFocused && liFocused[0] && !liFocused.hasClass('ng-hide')) {
             ctrl.addItem(liFocused.scope().$ctrl.ngValue, evt);
             ctrl.handligButtonUp(evt);
+          } else {
+            var value = $element.find('input').val();
+            if (ctrl.tagging && ctrl.taggingModel && value && value.trim() != "") {
+              var result = ctrl.tagging({
+                value: value
+              });
+              if (result != null && result != undefined) {
+                ctrl.addTagging(result);
+                ctrl.addItem(result, evt);
+                delete ctrl.inputValue;
+              }
+            }
           }
           break;
       }
@@ -487,6 +506,14 @@ var MultiSelect = {
     $scope.$on('$destroy', function () {
       return document.removeEventListener('click', listenerClick);
     });
+
+    ctrl.addTagging = function (result) {
+      if (!ctrl.taggingModel.filter(function (tagging) {
+        return angular.equals(tagging, result);
+      }).length > 0) {
+        ctrl.taggingModel.push(result);
+      }
+    };
 
     ctrl.filterOptions = function (option) {
       if (!ctrl.inputValue) return false;
