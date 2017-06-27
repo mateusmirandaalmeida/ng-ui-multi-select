@@ -1,0 +1,24 @@
+{
+  "name": "ng-ui-multi-select",
+  "description": "ng-ui-multi-select",
+  "main": "./src/index.js",
+  "authors": [
+    "Mateus Miranda de Almeida"
+  ],
+  "license": "LGPL-3.0",
+  "keywords": [
+    "gumga",
+    "controller",
+    "angular",
+    "1.x"
+  ],
+  "homepage": "https://github.com/mateusmirandaalmeida/ng-ui-multi-select",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

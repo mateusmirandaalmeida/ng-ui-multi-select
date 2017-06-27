@@ -16,20 +16,58 @@
     <main>
       <div class="container">
 
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <h3>Instalação Bower: </h3>
+            <div class="row">
+              <div class="col-xs-12">
+                <label>bower install ng-ui-multi-select --save</label> <br>
+                Importe o arquivo JavaScript: <br>
+                <code class="prettyprint">&lt;script src="bower_components/ng-ui-multi-select/dist/ng-ui-multi-select.min.js"&gt;&lt;/script&gt;</code> <br>
+                E também o arquivo CSS: <br>
+                <code class="prettyprint">&lt;link rel="stylesheet" href="bower_components/ng-ui-multi-select/dist/ng-ui-multi-select.min.css"/&gt;</code>
+              </div>
+            </div> <br>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <h3>Instalação NPM: </h3>
+            <div class="row">
+              <div class="col-xs-12">
+                <label>npm install ng-ui-multi-select --save</label> <br>
+                Importe o arquivo JavaScript: <br>
+                <code class="prettyprint">&lt;script src="node_modules/ng-ui-multi-select/dist/ng-ui-multi-select.min.js"&gt;&lt;/script&gt;</code> <br>
+                E também o arquivo CSS: <br>
+                <code class="prettyprint">&lt;link rel="stylesheet" href="node_modules/ng-ui-multi-select/dist/ng-ui-multi-select.min.css"/&gt;</code>
+              </div>
+            </div> <br>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <h3>Importação do módulo:</h3>
+            <div class="row">
+              <div class="col-xs-12">
+                <pre><code class="prettyprint">angular.module('app', ['ngUiMultiSelect']);</code></pre>
+              </div>
+            </div> <br>
+          </div>
+        </div>
+
+
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <input type="text" ng-model="registro.nome" class="form-control"> <br><br>
-              <button type="button" ng-click="disabled = !disabled">Habilitar/Desabilitar funcionarios</button>
-            </div>
-            <div class="form-group">
               <label>Funcionarios: </label>
 
-              <ui-multi-select placeholder="Buscar..." ng-model="registro.funcionarios" close-on-select-item="false" ng-disabled="disabled">
-                <ui-multi-select-item   ng-repeat="item in registro.funcionarios" ng-value="item">
+              <ui-multi-select placeholder="Buscar..." ng-model="funcionarios" close-on-select-item="false" ng-disabled="disabled">
+                <ui-multi-select-item   ng-repeat="item in funcionarios" ng-value="item">
                   {{item.nome}}
                 </ui-multi-select-item>
-                <ui-multi-select-option ng-repeat="option in items" ng-value="option" ng-disabled="option.idade == 19">
+                <ui-multi-select-option ng-repeat="option in items" ng-value="option">
                   {{option.nome}}
                 </ui-multi-select-option>
               </ui-multi-select>
@@ -37,8 +75,9 @@
              </div>
 
           </div>
-          <div class="col-md-8"><br><br>
-            {{registro}}
+          <div class="col-md-8">
+            <label>Model: </label>
+            <pre>{{funcionarios|json}}</pre>
           </div>
         </div>
 
@@ -49,8 +88,8 @@
   &lt;label&gt;Funcionarios: &lt;/label&gt;
   &lt;ui-multi-select placeholder="Buscar..."
                    close-on-select-item="false"
-                   ng-model="selectedItems"&gt;
-    &lt;ui-multi-select-item ng-repeat="item in selectedItems"
+                   ng-model="funcionarios"&gt;
+    &lt;ui-multi-select-item ng-repeat="item in funcionarios"
                           ng-value="item"&gt;
       {{item.nome}}
     &lt;/ui-multi-select-item&gt;
@@ -103,6 +142,14 @@
                 </tr>
                 <tr>
                   <td>
+                    ng-disabled
+                  </td>
+                  <td>
+                    [Boolean] Você pode desabilitar todo componente, bloqueando remover ou adicionar items.
+                  </td>
+                </tr>
+                <tr>
+                  <td>
                     placeholder
                   </td>
                   <td>
@@ -127,6 +174,34 @@
             <p>
               Diretiva responsavél por criar os templates dos itens que estarão selecionados dentro da input.
             </p>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <tr>
+                  <th>
+                    Atributo
+                  </th>
+                  <th>
+                    Descrição
+                  </th>
+                </tr>
+                <tr>
+                  <td>
+                    ng-value
+                  </td>
+                  <td>
+                    [*] Informe o item do ng-repeat para conhecermos seu objeto.
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    ng-disabled
+                  </td>
+                  <td>
+                    [Boolean] Você pode desabilitar algum item, bloqueando remove-lo quando for adicionado.
+                  </td>
+                </tr>
+              </table>
+            </div>
           </div>
         </div>
         <div class="row">
@@ -135,6 +210,34 @@
             <p>
               Diretiva responsavél por mostrar as opções que ainda estão disponíveis para usuário selecionar.
             </p>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <tr>
+                  <th>
+                    Atributo
+                  </th>
+                  <th>
+                    Descrição
+                  </th>
+                </tr>
+                <tr>
+                  <td>
+                    ng-value
+                  </td>
+                  <td>
+                    [*] Informe o item do ng-repeat para conhecermos seu objeto.
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    ng-disabled
+                  </td>
+                  <td>
+                    [Boolean] Você pode desabilitar alguma opção, bloqueando adiciona-la no array.
+                  </td>
+                </tr>
+              </table>
+            </div>
           </div>
         </div>
 
@@ -149,10 +252,7 @@
     <script type="text/javascript">
       angular.module('app', ['ngUiMultiSelect']).controller('ctrl', function($scope, $timeout, $http){
 
-          $scope.registro = {
-            nome: 'Mateus Miranda',
-            funcionarios : []
-          }
+          $scope.funcionarios = [];
 
           $scope.items = [
             { nome: 'Mateus',  idade: 20},

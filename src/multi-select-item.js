@@ -34,8 +34,37 @@ const MultiSelectItem = {
       ctrl.uiMultiSelectCtrl.applyFocused($element.find('div.item-container'));
     }
 
+    ctrl.moveFocusToLeft = (evt) => {
+      const previousElement = angular.element(evt.target.parentNode).prev();
+      if(previousElement && previousElement[0]){
+        var prev = getPrev(previousElement);
+        if(prev && prev[0]){
+          ctrl.uiMultiSelectCtrl.applyFocused(prev.find('div.item-container'));
+        }else{
+          evt.stopPropagation();
+        }
+      }else{
+        evt.stopPropagation();
+      }
+    }
+
+    ctrl.moveFocusToRight = (evt) => {
+      const nextElement = angular.element(evt.target.parentNode).next();
+      if(nextElement && nextElement[0]){
+        var next = getNext(nextElement);
+        if(next && next[0]){
+          ctrl.uiMultiSelectCtrl.applyFocused(next.find('div.item-container')[0]);
+        }else{
+          ctrl.uiMultiSelectCtrl.addFocusInput();
+        }
+        return;
+      }else{
+        ctrl.uiMultiSelectCtrl.addFocusInput();
+      }
+    }
+
     const getPrev = (elm) => {
-      if(elm.classList.contains('item-disabled')){
+      if(elm.find('div.item-container')[0] && elm.find('div.item-container')[0].classList.contains('item-disabled')){
         if(elm.prev){
           return getPrev(elm.prev());
         }
@@ -44,37 +73,14 @@ const MultiSelectItem = {
       return elm;
     }
 
-    ctrl.moveFocusToLeft = (evt) => {
-      const previousElement = angular.element(evt.target.parentNode).prev();
-      if(previousElement && previousElement[0]){
-        var prev = getPrev(previousElement.find('div.item-container')[0]);
-        if(prev){
-          ctrl.uiMultiSelectCtrl.applyFocused(prev);
-        }
-      }
-    }
-
     const getNext = (elm) => {
-      if(elm.classList.contains('item-disabled')){
+      if(elm.find('div.item-container')[0] && elm.find('div.item-container')[0].classList.contains('item-disabled')){
         if(elm.next){
           return getNext(elm.next());
         }
         return;
       }
       return elm;
-    }
-
-    ctrl.moveFocusToRight = (evt) => {
-      const nextElement = angular.element(evt.target.parentNode).next();
-      if(nextElement && nextElement[0]){
-        var next = getNext(nextElement.find('div.item-container')[0]);
-        if(next){
-          ctrl.uiMultiSelectCtrl.applyFocused(next);
-        }
-        return;
-      }else{
-        ctrl.uiMultiSelectCtrl.addFocusInput();
-      }
     }
 
     document.addEventListener('keydown', evt => {
@@ -85,25 +91,27 @@ const MultiSelectItem = {
     })
 
     document.addEventListener('keyup', evt => {
-      if(ctrl.ngValue && $element.find('div.item-container').hasClass('item-focused')){
-        switch (evt.keyCode) {
-          case 8:
-            ctrl.uiMultiSelectCtrl.handlingBackspace(evt);
-            break;
-          case 9:
-            ctrl.uiMultiSelectCtrl.addFocusInput();
-            break;
-          case 46:
-            ctrl.uiMultiSelectCtrl.handlingBackspace(evt);
-            break;
-          case 37:
-            ctrl.moveFocusToLeft(evt);
-            break;
-          case 39:
-            ctrl.moveFocusToRight(evt);
-            break;
+      $timeout(() => {
+        if(ctrl.ngValue && $element.find('div.item-container')[0].classList.contains('item-focused')){
+          switch (evt.keyCode) {
+            case 8:
+              ctrl.uiMultiSelectCtrl.handlingBackspace(evt);
+              break;
+            case 9:
+              ctrl.uiMultiSelectCtrl.addFocusInput();
+              break;
+            case 46:
+              ctrl.uiMultiSelectCtrl.handlingBackspace(evt);
+              break;
+            case 37:
+              ctrl.moveFocusToLeft(evt);
+              break;
+            case 39:
+              ctrl.moveFocusToRight(evt);
+              break;
+          }
         }
-      }
+      })
     })
 
   }]

@@ -15,7 +15,7 @@ const MultiSelect = {
              ng-class="{'item-disabled' : $ctrl.ngDisabled}"
              data-ng-click="$ctrl.open($event)"
              data-ng-disabled="$ctrl.ngDisabled"
-             data-ng-focus="$ctrl.removeFocusedItems()"
+             data-ng-focus="$ctrl.removeFocusedItems();"
              data-ng-keyup="$ctrl.keyPress($event)"
              style="{{$ctrl.ngModel.length == 0 ? 'width: 100%' : ''}}" />
       <ul ng-transclude="options" class="options">
@@ -60,13 +60,19 @@ const MultiSelect = {
       })
     }
 
+    ctrl.removeFocusedOptions = () => {
+      angular.forEach($element.find('ui-multi-select-option').find('li.option-container'), optionContainer => {
+        angular.element(optionContainer).removeClass('option-focused');
+      })
+    }
+
     ctrl.removeFocusInput = () => {
       $element.find('input').blur();
     }
 
-    ctrl.addFocusInput = (ignoreClique) => {
+    ctrl.addFocusInput = (ignoreClick) => {
       $timeout(() => {
-        if(!ignoreClique){
+        if(!ignoreClick){
           $element.find('input').click();
         }
         $element.find('input').focus();
@@ -77,13 +83,21 @@ const MultiSelect = {
       ctrl.removeFocusedItems();
       angular.element(item).addClass('item-focused');
       angular.element(item).focus();
+      ctrl.close();
+    }
+
+    ctrl.getLastItemEnabled = (item) => {
+      if(item.find('div.item-container').hasClass('item-disabled')){
+        return ctrl.getLastItemEnabled(item.prev());
+      }
+      return item;
     }
 
     ctrl.analyseIfContainsOtherItem = () => {
       $timeout(()=>{
-        const items = $element.find('ui-multi-select-item').last();
+        const items = ctrl.getLastItemEnabled($element.find('ui-multi-select-item').last());
         if(items && items[0]){
-          ctrl.applyFocused(items.find('.item-container'));
+          ctrl.applyFocused(items.find('div.item-container'));
         }else{
           ctrl.addFocusInput();
         }
@@ -107,7 +121,7 @@ const MultiSelect = {
         ctrl.applyFocusedOrRemoveItem(angular.element(itemFocused[0].parentNode), evt);
         return;
       }
-      const items = $element.find('ui-multi-select-item').last();
+      const items = ctrl.getLastItemEnabled($element.find('ui-multi-select-item').last());
       ctrl.applyFocusedOrRemoveItem(items, evt);
     }
 
@@ -201,17 +215,16 @@ const MultiSelect = {
 
     ctrl.keyPress = evt => {
       evt.stopPropagation();
-      const value = $element.find('input').val();
       switch (evt.keyCode) {
         case 8:
-          if(!value){
+          if(!ctrl.inputOldValue){
             ctrl.close();
             ctrl.removeFocusInput();
             ctrl.handlingBackspace(evt);
           }
           break;
         case 37:
-          if(!value){
+          if(!ctrl.inputOldValue){
             ctrl.removeFocusInput();
             ctrl.close();
             ctrl.handlingBackspace(evt);
@@ -229,6 +242,7 @@ const MultiSelect = {
             ctrl.handligButtonUp(evt);
             break;
         case 13:
+            if(!ctrl.opened) return;
             const liFocused = $element.find('ui-multi-select-option').find('li.option-container.option-focused');
             if(liFocused && liFocused[0]){
               ctrl.addItem(liFocused.scope().$ctrl.ngValue, evt);
@@ -236,6 +250,7 @@ const MultiSelect = {
             }
             break;
       }
+      ctrl.inputOldValue = $element.find('input').val();
     }
 
     let listenerClick = document.addEventListener('click', event => $timeout(() => {
@@ -261,6 +276,12 @@ const MultiSelect = {
         return option.indexOf(ctrl.inputValue) == -1;
       }
     }
+
+    $scope.$watch('$ctrl.ngDisabled', (disabled) => {
+      if(!disabled) return;
+      ctrl.removeFocusedItems();
+      ctrl.removeFocusedOptions();
+    })
 
     ctrl.addItem = (value, evt) => {
       ctrl.ngModel = ctrl.ngModel || [];

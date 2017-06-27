@@ -1,5 +1,6 @@
 //css
 require('./multi-select.css');
+
 //directives
 import MultiSelect from  './multi-select';
 import MultiSelectOption from  './multi-select-option';
