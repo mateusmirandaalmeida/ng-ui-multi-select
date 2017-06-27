@@ -13,7 +13,7 @@
     "1.x"
   ],
   "homepage": "https://github.com/mateusmirandaalmeida/ng-ui-multi-select",
-  "private": true,
+  "private": false,
   "ignore": [
     "**/.*",
     "node_modules",
