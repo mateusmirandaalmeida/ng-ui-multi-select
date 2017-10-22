@@ -11,6 +11,8 @@ const MultiSelect = {
       <div ng-transclude="items"></div>
       <input placeholder="{{$ctrl.placeholder}}"
              data-ng-model="$ctrl.inputValue"
+             data-ng-model-options="{debounce: 1000}"
+             data-ng-change="$ctrl.changeModel($ctrl.inputValue)"
              tabindex="0"
              ng-class="{'item-disabled' : $ctrl.ngDisabled}"
              data-ng-click="$ctrl.open($event)"
@@ -18,6 +20,7 @@ const MultiSelect = {
              data-ng-focus="$ctrl.removeFocusedItems();"
              data-ng-keyup="$ctrl.keyPress($event)"
              style="{{$ctrl.ngModel.length == 0 ? 'width: 100%' : ''}}" />
+      <div class="progress indeterminate" ng-show="$ctrl.loading"></div>
       <ul ng-transclude="options" class="options">
       </ul>
       <span class="select-clearfix"></span>
@@ -30,10 +33,25 @@ const MultiSelect = {
     placeholder        : '@?',
     searchField        : '@?',
     tagging            : '&?',
-    taggingModel       : '=?'
+    taggingModel       : '=?',
+    searchOptions      : '&?', //metodo de buscar novas opções
+    onSelected         : '&?', //evento ao selecionar um item
+    onRemove           : '&?' //evento ao remover um item
   },
   controller: ['$scope','$attrs','$timeout','$element', function($scope,$attrs,$timeout,$element){
     let ctrl = this;
+
+    ctrl.changeModel = value => {
+      if(ctrl.searchOptions){
+        ctrl.loading = true;
+        if(value == undefined || value == null) value = '';
+        ctrl.searchOptions({value: value}).then(resp => {
+          ctrl.loading = false;
+        }, err => {
+          ctrl.loading = false;
+        });
+      }
+    }
 
     ctrl.open = (evt) => {
       if(evt) evt.stopPropagation();
@@ -57,6 +75,9 @@ const MultiSelect = {
     }
 
     ctrl.removeFocusedItems = () => {
+      if($element.find('ui-multi-select-option').find('li.option-container').length == 0){
+        ctrl.changeModel();
+      }
       angular.forEach($element.find('ui-multi-select-item div.item-container'), itemContainer => {
         angular.element(itemContainer).removeClass('item-focused');
       })
@@ -258,7 +279,7 @@ const MultiSelect = {
                 if (result != null && result != undefined) {
                   ctrl.addTagging(result);
                   ctrl.addItem(result, evt);
-                  delete ctrl.inputValue
+                  ctrl.inputValue = '';
                 }
               }
             }
@@ -309,6 +330,9 @@ const MultiSelect = {
       if(ctrl.closeOnSelectItem == undefined || !ctrl.closeOnSelectItem){
         evt.stopPropagation();
       }
+      if(ctrl.onSelected){
+        ctrl.onSelected({value: value});
+      }
     }
 
     ctrl.removeItem = (value, evt) => {
@@ -321,6 +345,9 @@ const MultiSelect = {
       })
       if((ctrl.closeOnSelectItem == undefined || !ctrl.closeOnSelectItem) && evt){
         evt.stopPropagation();
+      }
+      if(ctrl.onRemove){
+        ctrl.onRemove({value: value});
       }
     }
 

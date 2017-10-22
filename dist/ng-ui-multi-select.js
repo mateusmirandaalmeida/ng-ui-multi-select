@@ -153,7 +153,7 @@ var MultiSelectItem = {
     };
 
     document.addEventListener('keydown', function (evt) {
-      if (ctrl.ngValue && $element.find('div.item-container').hasClass('item-focused')) {
+      if (evt.target.nodeName != 'INPUT' && ctrl.ngValue && $element.find('div.item-container').hasClass('item-focused')) {
         switch (evt.keyCode) {
           case 8:
             ctrl.uiMultiSelectCtrl.handlingBackspace(evt);
@@ -252,7 +252,7 @@ var MultiSelect = {
     'options': '?uiMultiSelectOption',
     'items': '?uiMultiSelectItem'
   },
-  template: '\n    <div>\n      <div ng-transclude="items"></div>\n      <input placeholder="{{$ctrl.placeholder}}"\n             data-ng-model="$ctrl.inputValue"\n             tabindex="0"\n             ng-class="{\'item-disabled\' : $ctrl.ngDisabled}"\n             data-ng-click="$ctrl.open($event)"\n             data-ng-disabled="$ctrl.ngDisabled"\n             data-ng-focus="$ctrl.removeFocusedItems();"\n             data-ng-keyup="$ctrl.keyPress($event)"\n             style="{{$ctrl.ngModel.length == 0 ? \'width: 100%\' : \'\'}}" />\n      <ul ng-transclude="options" class="options">\n      </ul>\n      <span class="select-clearfix"></span>\n    </div>\n  ',
+  template: '\n    <div>\n      <div ng-transclude="items"></div>\n      <input placeholder="{{$ctrl.placeholder}}"\n             data-ng-model="$ctrl.inputValue"\n             data-ng-model-options="{debounce: 1000}"\n             data-ng-change="$ctrl.changeModel($ctrl.inputValue)"\n             tabindex="0"\n             ng-class="{\'item-disabled\' : $ctrl.ngDisabled}"\n             data-ng-click="$ctrl.open($event)"\n             data-ng-disabled="$ctrl.ngDisabled"\n             data-ng-focus="$ctrl.removeFocusedItems();"\n             data-ng-keyup="$ctrl.keyPress($event)"\n             style="{{$ctrl.ngModel.length == 0 ? \'width: 100%\' : \'\'}}" />\n      <div class="progress indeterminate" ng-show="$ctrl.loading"></div>\n      <ul ng-transclude="options" class="options">\n      </ul>\n      <span class="select-clearfix"></span>\n    </div>\n  ',
   bindings: {
     ngModel: '=',
     ngDisabled: '=?',
@@ -260,10 +260,25 @@ var MultiSelect = {
     placeholder: '@?',
     searchField: '@?',
     tagging: '&?',
-    taggingModel: '=?'
+    taggingModel: '=?',
+    searchOptions: '&?', //metodo de buscar novas opções
+    onSelected: '&?', //evento ao selecionar um item
+    onRemove: '&?' //evento ao remover um item
   },
   controller: ['$scope', '$attrs', '$timeout', '$element', function ($scope, $attrs, $timeout, $element) {
     var ctrl = this;
+
+    ctrl.changeModel = function (value) {
+      if (ctrl.searchOptions) {
+        ctrl.loading = true;
+        if (value == undefined || value == null) value = '';
+        ctrl.searchOptions({ value: value }).then(function (resp) {
+          ctrl.loading = false;
+        }, function (err) {
+          ctrl.loading = false;
+        });
+      }
+    };
 
     ctrl.open = function (evt) {
       if (evt) evt.stopPropagation();
@@ -287,6 +302,9 @@ var MultiSelect = {
     };
 
     ctrl.removeFocusedItems = function () {
+      if ($element.find('ui-multi-select-option').find('li.option-container').length == 0) {
+        ctrl.changeModel();
+      }
       angular.forEach($element.find('ui-multi-select-item div.item-container'), function (itemContainer) {
         angular.element(itemContainer).removeClass('item-focused');
       });
@@ -488,7 +506,7 @@ var MultiSelect = {
               if (result != null && result != undefined) {
                 ctrl.addTagging(result);
                 ctrl.addItem(result, evt);
-                delete ctrl.inputValue;
+                ctrl.inputValue = '';
               }
             }
           }
@@ -545,6 +563,9 @@ var MultiSelect = {
       if (ctrl.closeOnSelectItem == undefined || !ctrl.closeOnSelectItem) {
         evt.stopPropagation();
       }
+      if (ctrl.onSelected) {
+        ctrl.onSelected({ value: value });
+      }
     };
 
     ctrl.removeItem = function (value, evt) {
@@ -557,6 +578,9 @@ var MultiSelect = {
       });
       if ((ctrl.closeOnSelectItem == undefined || !ctrl.closeOnSelectItem) && evt) {
         evt.stopPropagation();
+      }
+      if (ctrl.onRemove) {
+        ctrl.onRemove({ value: value });
       }
     };
 

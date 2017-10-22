@@ -16,33 +16,38 @@
     <main>
       <div class="container">
 
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <h3>Instalação Bower: </h3>
-            <div class="row">
-              <div class="col-xs-12">
-                <label>bower install ng-ui-multi-select --save</label> <br>
-                Importe o arquivo JavaScript: <br>
-                <code class="prettyprint">&lt;script src="bower_components/ng-ui-multi-select/dist/ng-ui-multi-select.min.js"&gt;&lt;/script&gt;</code> <br>
-                E também o arquivo CSS: <br>
-                <code class="prettyprint">&lt;link rel="stylesheet" href="bower_components/ng-ui-multi-select/dist/ng-ui-multi-select.min.css"/&gt;</code>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <h3>Instalação Bower: </h3>
+                <div class="row">
+                  <div class="col-xs-12">
+                    <label>bower install ng-ui-multi-select --save</label> <br>
+                    Importe o arquivo JavaScript: <br>
+                    <code class="prettyprint">&lt;script src="bower_components/ng-ui-multi-select/dist/ng-ui-multi-select.min.js"&gt;&lt;/script&gt;</code> <br>
+                    E também o arquivo CSS: <br>
+                    <code class="prettyprint">&lt;link rel="stylesheet" href="bower_components/ng-ui-multi-select/dist/ng-ui-multi-select.min.css"/&gt;</code>
+                  </div>
+                </div> <br>
               </div>
-            </div> <br>
+            </div>
           </div>
-        </div>
-
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <h3>Instalação NPM: </h3>
-            <div class="row">
-              <div class="col-xs-12">
-                <label>npm install ng-ui-multi-select --save</label> <br>
-                Importe o arquivo JavaScript: <br>
-                <code class="prettyprint">&lt;script src="node_modules/ng-ui-multi-select/dist/ng-ui-multi-select.min.js"&gt;&lt;/script&gt;</code> <br>
-                E também o arquivo CSS: <br>
-                <code class="prettyprint">&lt;link rel="stylesheet" href="node_modules/ng-ui-multi-select/dist/ng-ui-multi-select.min.css"/&gt;</code>
+          <div class="col-md-6">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <h3>Instalação NPM: </h3>
+                <div class="row">
+                  <div class="col-xs-12">
+                    <label>npm install ng-ui-multi-select --save</label> <br>
+                    Importe o arquivo JavaScript: <br>
+                    <code class="prettyprint">&lt;script src="node_modules/ng-ui-multi-select/dist/ng-ui-multi-select.min.js"&gt;&lt;/script&gt;</code> <br>
+                    E também o arquivo CSS: <br>
+                    <code class="prettyprint">&lt;link rel="stylesheet" href="node_modules/ng-ui-multi-select/dist/ng-ui-multi-select.min.css"/&gt;</code>
+                  </div>
+                </div> <br>
               </div>
-            </div> <br>
+            </div>
           </div>
         </div>
 
@@ -60,72 +65,16 @@
 
         <div class="row">
           <div class="col-md-12">
-            <div class="form-group">
-              <label>Funcionarios: </label>
-
-              <ui-multi-select placeholder="Buscar..."
-                               ng-model="funcionarios"
-                               close-on-select-item="false"
-                               tagging="addItem(value)"
-                               tagging-model="items"
-                               ng-disabled="disabled">
-                <ui-multi-select-item   ng-repeat="item in funcionarios" ng-value="item">
-                  {{item.nome}}
-                </ui-multi-select-item>
-                <ui-multi-select-option ng-repeat="option in items" ng-value="option">
-                  {{option.nome}}
-                </ui-multi-select-option>
-              </ui-multi-select>
-
-             </div>
-
-          </div>
-
-          <div class="col-md-8">
-            <label>Model: </label>
-            <pre>{{funcionarios|json}}</pre>
-          </div>
-        </div>
-
-        <div class="row" ng-non-bindable>
-          <div class="col-md-6">
-            <h3>HTML</h3>
-            <pre><code style="font-size: 10px;" class="prettyprint">&lt;div class="form-group"&gt;
-  &lt;label&gt;Funcionarios: &lt;/label&gt;
-  &lt;ui-multi-select placeholder="Buscar..."
-                   close-on-select-item="false"
-                   ng-model="funcionarios"
-                   tagging="addItem(value)"
-                   tagging-model="items"&gt;
-    &lt;ui-multi-select-item ng-repeat="item in funcionarios"
-                          ng-value="item"&gt;
-      {{item.nome}}
-    &lt;/ui-multi-select-item&gt;
-    &lt;ui-multi-select-option ng-repeat="option in items"
-                            ng-value="option"&gt;
-      {{option.nome}}
-    &lt;/ui-multi-select-option&gt;
-  &lt;/ui-multi-select&gt;
-&lt;/div&gt;</code></pre>
-          </div>
-          <div class="col-md-6">
-            <h3>JavaScript</h3>
-            <pre><code style="font-size: 10px;" class="prettyprint">angular.module('app', ['ngUiMultiSelect'])
-.controller('ctrl', function($scope, $timeout){
-    $scope.selectedItems = [];
-
-    $scope.items = [
-      { nome: 'Mateus',  idade: 20},
-      { nome: 'Thalita', idade: 19},
-      { nome: 'Willian', idade: 25},
-      { nome: 'Felipe',  idade: 25},
-      { nome: 'Munif',   idade: 50}
-    ];
-
-    $scope.addItem = function(value){
-      return { nome: value }
-    };
-})</code></pre>
+            <div class="panel panel-default">
+              <div class="panel-body">
+                  <h3>Exemplos:</h3>
+                  <ul class="">
+                    <li><a href="simple-array.html">Array</a> - Opções de um array simples</li>
+                    <li><a href="tagging.html">Tagging</a> - Possibilitar que o usuário adicione items.</li>
+                    <li><a href="async.html">Array Async</a> - Possibilitar que as opções sejam assíncronas.</li>
+                  </ul>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -175,6 +124,22 @@
                   </td>
                   <td>
                     [Boolean] - Atributo que decide se vai fechar ou não a caixa de opções.
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    on-selected
+                  </td>
+                  <td>
+                    [Function] - Função executada ao selecionar um novo item. Ex: minhafuncao(value);
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    on-remove
+                  </td>
+                  <td>
+                    [Function] - Função executada ao remover um item. Ex: minhafuncao(value);
                   </td>
                 </tr>
                 <tr>
@@ -289,7 +254,6 @@
 
           $scope.items = [
             { nome: 'Mateus',  idade: 20},
-            { nome: 'Thalita', idade: 19},
             { nome: 'Willian', idade: 25},
             { nome: 'Felipe',  idade: 25},
             { nome: 'Munif',   idade: 50}

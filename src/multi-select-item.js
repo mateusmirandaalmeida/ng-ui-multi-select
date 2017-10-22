@@ -84,7 +84,7 @@ const MultiSelectItem = {
     }
 
     document.addEventListener('keydown', evt => {
-      if(ctrl.ngValue && $element.find('div.item-container').hasClass('item-focused')){
+      if(evt.target.nodeName != 'INPUT' && ctrl.ngValue && $element.find('div.item-container').hasClass('item-focused')){
         switch (evt.keyCode) {
           case 8:
             ctrl.uiMultiSelectCtrl.handlingBackspace(evt);
