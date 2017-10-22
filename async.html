@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html ng-app="app">
+  <head>
+    <meta charset="utf-8">
+    <title>ng-ui-multi-select</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="dist/ng-ui-multi-select.css">
+  </head>
+  <body ng-controller="ctrl"> <br><br>
+    <style media="screen">
+      body{
+        background: #f5f5f5;
+      }
+    </style>
+
+    <main>
+      <div class="container">
+
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Funcionarios: </label>
+
+              <ui-multi-select placeholder="Buscar..."
+                               ng-model="funcionarios"
+                               close-on-select-item="false"
+                               on-selected="onSelect(value)"
+                               on-remove="onRemove(value)"
+                               search-options="getOptions(value)">
+                <ui-multi-select-item   ng-repeat="item in funcionarios" ng-value="item">
+                  {{item.name}}
+                </ui-multi-select-item>
+                <ui-multi-select-option ng-repeat="option in items" ng-value="option">
+                  {{option.name}}
+                </ui-multi-select-option>
+              </ui-multi-select>
+
+             </div>
+
+          </div>
+
+          <div class="col-md-8">
+            <label>Model: </label>
+            <pre>{{funcionarios|json}}</pre>
+          </div>
+        </div>
+
+        <div class="row" ng-non-bindable>
+          <div class="col-md-6">
+            <h3>HTML</h3>
+            <pre><code style="font-size: 10px;" class="prettyprint">&lt;div class="form-group"&gt;
+  &lt;label&gt;Funcionarios: &lt;/label&gt;
+  &lt;ui-multi-select placeholder="Buscar..."
+                   close-on-select-item="false"
+                   ng-model="funcionarios"
+                   search-options="getOptions(value)"&gt;
+    &lt;ui-multi-select-item ng-repeat="item in funcionarios"
+                          ng-value="item"&gt;
+      {{item.username}}
+    &lt;/ui-multi-select-item&gt;
+    &lt;ui-multi-select-option ng-repeat="option in items"
+                            ng-value="option"&gt;
+      {{option.username}}
+    &lt;/ui-multi-select-option&gt;
+  &lt;/ui-multi-select&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+          <div class="col-md-6">
+            <h3>JavaScript</h3>
+            <pre><code style="font-size: 10px;" class="prettyprint">angular.module('app', ['ngUiMultiSelect'])
+.controller('ctrl', function($scope, $timeout, $http){
+
+    $scope.getOptions = function(viewValue){
+      return $http.get('https://jsonplaceholder.typicode.com/users?q='+viewValue)
+        .then(function(resp){
+          $scope.items = resp.data;
+        })
+    }
+
+})</code></pre>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+    <script type="text/javascript" src="dist/ng-ui-multi-select.js"></script>
+
+    <script type="text/javascript">
+      angular.module('app', ['ngUiMultiSelect']).controller('ctrl', function($scope, $timeout, $http){
+
+          $scope.funcionarios = [];
+
+          $scope.onSelect = function(value){
+              console.log(value);
+          }
+
+          $scope.onRemove = function(value){
+              console.log(value);
+          }
+
+          $scope.getOptions = function(viewValue){
+            return $http.get('https://jsonplaceholder.typicode.com/users?q='+viewValue)
+              .then(function(resp){
+                $scope.items = resp.data;
+              })
+          }
+
+      })
+    </script>
+
+  </body>
+</html>
